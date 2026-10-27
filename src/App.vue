@@ -17,7 +17,7 @@
     <div v-else-if="MlCadViewer" class="viewer-screen">
       <component
         :is="MlCadViewer"
-        locale="en"
+        locale="zh"
         :local-file="store.selectedFile ?? undefined"
         :mode="selectedMode"
         :use-main-thread-draw="useMainThreadDraw"
