@@ -29,9 +29,58 @@ jobs:
       - name: Build Web App
         run: pnpm run build
 
-      - name: Prepare package.json and entry for Electron
+      - name: Setup Electron entry and package config
         run: |
-          node -e "const fs=require('fs'); if(fs.existsSync('main.js')) fs.renameSync('main.js', 'main.cjs'); const pkg=JSON.parse(fs.readFileSync('./package.json','utf8')); pkg.main='main.cjs'; pkg.productName='CADViewer'; fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2))"
+          node -e "
+          const fs = require('fs');
+          // 写入带控制台的入口文件
+          const mainContent = \`
+          const { app, BrowserWindow } = require('electron');
+          const path = require('path');
+
+          function createWindow() {
+            const win = new BrowserWindow({
+              width: 1400,
+              height: 900,
+              title: 'CADViewer',
+              webPreferences: {
+                nodeIntegration: false,
+                contextIsolation: true,
+                webSecurity: false
+              }
+            });
+
+            win.loadFile(path.join(__dirname, 'dist/index.html'));
+            // 自动开启开发者工具，排查是否有缺文件或报错
+            win.webContents.openDevTools();
+          }
+
+          app.whenReady().then(createWindow);
+          app.on('window-all-closed', () => {
+            if (process.platform !== 'darwin') app.quit();
+          });
+          \`;
+          fs.writeFileSync('main.cjs', mainContent);
+
+          // 更新 package.json，显式声明打包文件与输出目录
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          pkg.main = 'main.cjs';
+          pkg.productName = 'CADViewer';
+          pkg.build = {
+            appId: 'com.mlightcad.viewer',
+            directories: {
+              output: 'release'
+            },
+            files: [
+              'dist/**/*',
+              'main.cjs'
+            ],
+            win: {
+              target: 'portable'
+            }
+          };
+          fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
 
       - name: Build Windows EXE
         run: npx electron-builder --win portable --x64 --publish never
@@ -40,4 +89,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CAD-Viewer-Windows-EXE
-          path: dist/*.exe
+          path: release/*.exe
