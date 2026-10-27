@@ -24,13 +24,13 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm add -D electron electron-builder
+          pnpm add -D -w electron electron-builder
 
       - name: Build Web App
         run: pnpm run build
 
       - name: Build Windows EXE
-        run: npx electron-builder --win --x64 -c.extraMetadata.main=main.js
+        run: npx electron-builder --win portable --x64 -c.extraMetadata.main=main.js
 
       - name: Upload EXE Artifact
         uses: actions/upload-artifact@v4
