@@ -29,9 +29,9 @@ jobs:
       - name: Build Web App
         run: pnpm run build
 
-      - name: Prepare package.json for Electron
+      - name: Prepare package.json and entry for Electron
         run: |
-          node -e "const pkg=require('./package.json'); pkg.main='main.js'; require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2))"
+          node -e "const fs=require('fs'); if(fs.existsSync('main.js')) fs.renameSync('main.js', 'main.cjs'); const pkg=JSON.parse(fs.readFileSync('./package.json','utf8')); pkg.main='main.cjs'; pkg.productName='CADViewer'; fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2))"
 
       - name: Build Windows EXE
         run: npx electron-builder --win portable --x64 --publish never
