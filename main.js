@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, globalShortcut } = require('electron');
 const path = require('path');
 
 function createWindow() {
@@ -16,8 +16,13 @@ function createWindow() {
   Menu.setApplicationMenu(null);
   win.loadFile(path.join(__dirname, 'dist/index.html'));
 
-  // 加上这一行：打开控制台调试
-  win.webContents.openDevTools();
+  // 绑定 Ctrl+P 快捷键唤起系统打印
+  win.webContents.on('before-input-event', (event, input) => {
+    if (input.control && input.key.toLowerCase() === 'p') {
+      win.webContents.print();
+      event.preventDefault();
+    }
+  });
 }
 
 app.whenReady().then(createWindow);
