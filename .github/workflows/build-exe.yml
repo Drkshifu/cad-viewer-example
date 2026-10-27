@@ -29,8 +29,12 @@ jobs:
       - name: Build Web App
         run: pnpm run build
 
+      - name: Prepare package.json for Electron
+        run: |
+          node -e "const pkg=require('./package.json'); pkg.main='main.js'; require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2))"
+
       - name: Build Windows EXE
-        run: npx electron-builder --win portable --x64 -c.extraMetadata.main=main.js
+        run: npx electron-builder --win portable --x64 --publish never
 
       - name: Upload EXE Artifact
         uses: actions/upload-artifact@v4
