@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 
 function createWindow() {
@@ -14,16 +14,32 @@ function createWindow() {
   });
 
   Menu.setApplicationMenu(null);
-  win.loadFile(path.join(__dirname, 'dist/index.html'));
 
-  // 绑定 Ctrl+P 快捷键唤起系统打印
+  // 在页面完成加载后，自动设置 localStorage 并触发语言切换为中文
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.executeJavaScript(`
+      try {
+        localStorage.setItem('lang', 'zh-CN');
+        localStorage.setItem('locale', 'zh-CN');
+        localStorage.setItem('language', 'zh-CN');
+        localStorage.setItem('i18n_locale', 'zh-CN');
+      } catch (e) {}
+    `);
+  });
+
+  // 绑定 Ctrl+P 快捷键打印
   win.webContents.on('before-input-event', (event, input) => {
     if (input.control && input.key.toLowerCase() === 'p') {
       win.webContents.print();
       event.preventDefault();
     }
   });
+
+  win.loadFile(path.join(__dirname, 'dist/index.html'));
 }
+
+// 强制设置 Electron 底层首选语言为中文
+app.commandLine.appendSwitch('lang', 'zh-CN');
 
 app.whenReady().then(createWindow);
 
