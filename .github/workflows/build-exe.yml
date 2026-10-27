@@ -27,7 +27,7 @@ jobs:
           pnpm add -D -w electron electron-builder
 
       - name: Build Web App
-        run: pnpm run build
+        run: npx vite build
 
       - name: Prepare Electron Files
         run: |
