@@ -9,9 +9,9 @@
             </el-icon>
           </div>
           <div class="upload-hero-text">
-            <h1 class="upload-title">Select CAD File to View</h1>
+            <h1 class="upload-title">选择 CAD 文件查看</h1>
             <p class="upload-subtitle">
-              Import DWG or DXF drawings into the viewer
+              导入 DWG 或 DXF 图纸到查看器
             </p>
           </div>
         </section>
@@ -22,11 +22,11 @@
             class="new-drawing-button"
             @click="handleNewDrawing"
           >
-            New Drawing
+            新建图纸
           </button>
 
           <p class="upload-divider" aria-hidden="true">
-            <span>or</span>
+            <span>或者</span>
           </p>
 
           <el-upload
@@ -39,7 +39,7 @@
           >
             <div class="dropzone-content">
               <p class="dropzone-title">
-                Drop file or <span class="dropzone-link">browse</span>
+                拖拽文件到此处，或 <span class="dropzone-link">点击浏览</span>
               </p>
               <div class="format-tags">
                 <span class="format-tag">DWG</span>
@@ -52,16 +52,16 @@
 
       <section class="settings-section">
         <header class="settings-header">
-          <h2 class="settings-title">Open options</h2>
+          <h2 class="settings-title">打开选项</h2>
         </header>
 
         <div class="settings-grid">
           <div class="setting-block setting-block--full">
-            <h3 class="setting-label">Initial view</h3>
+            <h3 class="setting-label">初始视图</h3>
             <div
               class="pill-segment"
               role="radiogroup"
-              aria-label="Initial view"
+              aria-label="初始视图"
             >
               <button
                 v-for="option in openViewModes"
@@ -80,11 +80,11 @@
           </div>
 
           <div class="setting-block setting-block--full">
-            <h3 class="setting-label">Access mode</h3>
+            <h3 class="setting-label">访问模式</h3>
             <div
               class="pill-segment"
               role="radiogroup"
-              aria-label="Access mode"
+              aria-label="访问模式"
             >
               <button
                 v-for="mode in accessModes"
@@ -103,11 +103,11 @@
           </div>
 
           <div class="setting-block">
-            <h3 class="setting-label">Text rendering</h3>
+            <h3 class="setting-label">文字渲染</h3>
             <div
               class="pill-segment"
               role="radiogroup"
-              aria-label="Text rendering"
+              aria-label="文字渲染"
             >
               <button
                 type="button"
@@ -115,10 +115,10 @@
                 :class="{ 'is-active': !useMainThreadDraw }"
                 role="radio"
                 :aria-checked="!useMainThreadDraw"
-                title="Faster, more memory"
+                title="速度更快，占用内存稍多"
                 @click="useMainThreadDraw = false"
               >
-                Worker
+                后台线程 (Worker)
               </button>
               <button
                 type="button"
@@ -126,20 +126,20 @@
                 :class="{ 'is-active': useMainThreadDraw }"
                 role="radio"
                 :aria-checked="useMainThreadDraw"
-                title="Slower, less memory"
+                title="速度较慢，占用内存较少"
                 @click="useMainThreadDraw = true"
               >
-                Main thread
+                主线程
               </button>
             </div>
           </div>
 
           <div class="setting-block">
-            <h3 class="setting-label">Progressive</h3>
+            <h3 class="setting-label">渐进式渲染</h3>
             <div
               class="pill-segment"
               role="radiogroup"
-              aria-label="Progressive rendering"
+              aria-label="渐进式渲染"
             >
               <button
                 type="button"
@@ -147,10 +147,10 @@
                 :class="{ 'is-active': progressiveRendering }"
                 role="radio"
                 :aria-checked="progressiveRendering"
-                title="Show geometry while loading"
+                title="加载过程中逐步显示几何图形"
                 @click="progressiveRendering = true"
               >
-                On
+                开启
               </button>
               <button
                 type="button"
@@ -158,20 +158,20 @@
                 :class="{ 'is-active': !progressiveRendering }"
                 role="radio"
                 :aria-checked="!progressiveRendering"
-                title="Wait until fully converted"
+                title="转换完全完成后一次性显示"
                 @click="progressiveRendering = false"
               >
-                Off
+                关闭
               </button>
             </div>
           </div>
 
           <div class="setting-block">
-            <h3 class="setting-label">Non-plottable</h3>
+            <h3 class="setting-label">不可打印图层</h3>
             <div
               class="pill-segment"
               role="radiogroup"
-              aria-label="Non-plottable layers"
+              aria-label="不可打印图层"
             >
               <button
                 type="button"
@@ -179,10 +179,10 @@
                 :class="{ 'is-active': !drawNoPlotLayers }"
                 role="radio"
                 :aria-checked="!drawNoPlotLayers"
-                title="Web viewer default"
+                title="Web 查看器默认隐藏"
                 @click="drawNoPlotLayers = false"
               >
-                Hide
+                隐藏
               </button>
               <button
                 type="button"
@@ -190,10 +190,10 @@
                 :class="{ 'is-active': drawNoPlotLayers }"
                 role="radio"
                 :aria-checked="drawNoPlotLayers"
-                title="AutoCAD editor semantics"
+                title="AutoCAD 编辑器规则（显示）"
                 @click="drawNoPlotLayers = true"
               >
-                Show
+                显示
               </button>
             </div>
           </div>
@@ -240,18 +240,18 @@ const progressiveRendering = ref(false)
 const openViewModes = [
   {
     value: 'auto' as const,
-    label: 'Auto',
-    description: 'Based on access mode'
+    label: '自动',
+    description: '根据访问模式自动决定'
   },
   {
     value: AcApOpenViewMode.Extents,
-    label: 'Extents',
-    description: 'Fit drawing'
+    label: '范围缩放 (Extents)',
+    description: '缩放至适合整个图形大小'
   },
   {
     value: AcApOpenViewMode.Saved,
-    label: 'Saved',
-    description: 'AutoCAD saved view'
+    label: '保存视图 (Saved)',
+    description: '恢复 AutoCAD 保存时的初始视角'
   }
 ] as const
 
@@ -261,18 +261,18 @@ const resolveOpenViewMode = (): AcApOpenViewMode | undefined =>
 const accessModes = [
   {
     value: AcEdOpenMode.Read,
-    label: 'Read',
-    description: 'View only'
+    label: '只读 (Read)',
+    description: '仅用于查看'
   },
   {
     value: AcEdOpenMode.Review,
-    label: 'Review',
-    description: 'View & review'
+    label: '审阅 (Review)',
+    description: '查看与批注批阅'
   },
   {
     value: AcEdOpenMode.Write,
-    label: 'Write',
-    description: 'Full access'
+    label: '编辑 (Write)',
+    description: '完整读写与修改权限'
   }
 ] as const
 
@@ -305,7 +305,7 @@ const handleNewDrawing = () => {
 
 const beforeUpload: UploadProps['beforeUpload'] = (rawFile: File) => {
   if (!isValidFile(rawFile)) {
-    console.warn('Invalid file type. Please upload DWG or DXF files.')
+    console.warn('文件格式不支持，请上传 DWG 或 DXF 文件。')
     return false
   }
   return true
@@ -592,7 +592,6 @@ const isValidFile = (file: File): boolean => {
   color: #4f5fd0;
 }
 
-/* Narrow viewports: stack upload + settings as two vertical rows */
 @media (max-width: 768px) {
   .file-upload-container {
     max-width: 100%;
